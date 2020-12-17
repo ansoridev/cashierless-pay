@@ -33,8 +33,6 @@ Terima kasih kepada:
 > yang dapat mampu memajukan indonesia kedepannya
 > karena masa depan bangsa ada ditangan kita.
 
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
-
 ### Tim Cashierless Pay
 
 - Ahmad Ansori - XI RPL
