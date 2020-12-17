@@ -1,0 +1,100 @@
+{% extends 'merchant_layout/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4 class="font-size-18">Transaction Detail</h4>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Billing</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Transaction</a></li>
+                <li class="breadcrumb-item active">Detail</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            {% for for_trx in trx %}
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">            
+                        <div class="row">                                                  
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <address>
+                                    <strong>Customer Details</strong>
+                                    <br>{{ for_trx.users }}
+                                    <br>{{ for_trx.users_email }}</address>
+                            </div>
+                            <div class="col-6 text-right">
+                                <address>
+                                    <strong>Order Date:</strong><br>
+                                    {{ for_trx.time }}<br><br>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            <div class="p-2">
+                                <h3 class="font-size-16"><strong>Order summary</strong></h3>
+                            </div>
+                            <div class="">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <td><strong>Item</strong></td>
+                                            <td class="text-center"><strong>Unit</strong></td>
+                                            <td class="text-center"><strong>Quantity</strong></td>
+                                            <td class="text-right"><strong>Totals</strong></td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for summary_list in for_trx.summary %}
+                                        <tr>
+                                            <td>{{ summary_list.items_name }}</td>
+                                            <td class="text-center">{{ summary_list.items_unit }}</td>
+                                            <td class="text-center">{{ summary_list.quantity }}</td>
+                                            <td class="text-right">Rp. {{ summary_list.items_totals|intcomma }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="no-line"></td>
+                                            <td class="no-line"></td>
+                                            <td class="no-line text-center">
+                                                <strong>Total</strong></td>
+                                            <td class="no-line text-right"><h4 class="m-0">Rp. {{ for_trx.total|intcomma }}</h4></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="d-print-none">
+                                    <div class="float-right">
+                                        <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i class="fa fa-print"></i></a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- end row -->
+{% endblock content %}

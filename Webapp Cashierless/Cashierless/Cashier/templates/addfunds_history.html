@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4 class="font-size-18">Add Funds History</h4>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Add Funds</a></li>
+                <li class="breadcrumb-item active">History</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Deposit Management</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover table-centered table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">(#) Record</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Unique Code</th>
+                                <th scope="col">Total</th>
+                                <th scope="col" colspan="2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for for_deposit in deposit %}
+                            <tr>
+                                <th scope="row">#{{ for_deposit.record }}</th>
+                                <td>{{ for_deposit.method.name }}</td>
+                                <td>{{ for_deposit.method.type }}</td>
+                                <td>{% if for_deposit.method.type == "MANUAL" %}Not Available {% else %}{{ for_deposit.codeunik }}{% endif %}</td>
+                                <td>Rp. {{ for_deposit.total|intcomma }}</td>
+                                <td><span 
+                                    class="
+                                    {% if for_deposit.status == "PENDING" %}
+                                    badge badge-warning
+                                    {% elif for_deposit.status == "SUCCESS" %}
+                                    badge badge-success
+                                    {% else %}
+                                    badge badge-danger
+                                    {% endif %}
+                                    ">{{ for_deposit.status }}</span></td>
+                                <td>
+                                    <div>
+                                        <div>
+                                            <a class="btn btn-primary btn-sm waves-effect waves-light" href="/topup/{{ for_deposit.id }}/">Details</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+{% endblock content %}

@@ -1,0 +1,50 @@
+{% extends 'merchant_layout/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4 class="font-size-18">Log Entry</h4>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+                <li class="breadcrumb-item active">Log Entry</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Log Entry into Merchant</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover table-centered table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Customers</th>
+                                <th scope="col">Enter Time</th>
+                                <th scope="col">Exit Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for for_log in log %}
+                            <tr>
+                                <td>{{ for_log.users.name }}</td>
+                                <td>{{ for_log.enterTime }}</td>
+                                <td>{{ for_log.exitTime }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+{% endblock content %}

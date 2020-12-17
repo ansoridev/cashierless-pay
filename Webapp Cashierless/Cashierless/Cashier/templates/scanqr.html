@@ -1,0 +1,21 @@
+{% extends 'layout/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+<div id="reader" class="mt-2" width="600px"></div>
+<div id="scanned-result"></div>
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'assets/js/html5-qrcode.min.js' %}"></script>
+<script>
+function onScanSuccess(qrCodeMessage) {
+console.log(qrCodeMessage);
+}
+
+var html5QrcodeScanner = new Html5QrcodeScanner(
+	"reader", { fps: 10, qrbox: 250 });
+html5QrcodeScanner.render(onScanSuccess);
+</script>
+{% endblock javascript %}

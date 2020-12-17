@@ -1,0 +1,25 @@
+{% load humanize %}
+<thead>
+    <tr>
+        <th scope="col">Item Name</th>
+        <th scope="col">Unit Type</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Total</th>
+    </tr>
+</thead>
+<tbody>
+    {% if itemQ %}
+        {% for item in items %}
+            <tr>
+                <td>{{ item.items_name }}</td>
+                <td>{{ item.items_unit}}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rp. {{ item.items_price|intcomma }}</td>
+                <td>Rp. {{ item.items_totals|intcomma }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <p class="text-center mt-2">Cart Empty</p>
+    {% endif %}
+</tbody>

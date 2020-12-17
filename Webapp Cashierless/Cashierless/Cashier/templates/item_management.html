@@ -1,0 +1,184 @@
+{% extends 'merchant_layout/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}                   
+<!-- start page title -->
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <div class="page-title-box">
+            <h4 class="font-size-18">Item Management</h4>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Merchant</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Item</a></li>
+                <li class="breadcrumb-item active">Management</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Add or Update Item</h4>
+                <p class="card-title-desc">Here you can add or update items that are registered in your shop, later you can generate a QR code for each of your products</p>
+                <form class="custom-validation" action="#" novalidate="">
+                    <input type="hidden" id="itemid" value="0"/>
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" id="itemname" class="form-control" required="true" placeholder="Enter your Item name">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Unit Type</label>
+                                <select class="custom-select" id="itemunit">
+                                    <option value="Pcs">Packages</option>
+                                    <option value="Ltr">Liter</option>
+                                    <option value="Kg">Kilogram</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Stocks</label>
+                                <input type="number" id="itemstocks" class="form-control" required="true" placeholder="Enter your Item stocks">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemprice">Price</label>
+                        <input required="true" name="amount" id="itemprice" placeholder="Rp. 0,00" class="form-control input-mask text-left" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 0, 'digitsOptional': true, 'prefix': 'Rp. ', 'placeholder': ''" im-insert="true" style="text-align: right;" inputmode="numeric">
+                    </div>
+                    <div class="form-group mb-0">
+                        <div>
+                            <button id="addButton" type="button" onClick="buttonAction('add');" class="btn btn-success waves-effect waves-light mr-1">
+                            Add
+                            </button>
+                            <button id="updateButton" type="button" onClick="buttonAction('update');" disabled="true" class="btn btn-primary waves-effect waves-light mr-1">
+                            Update
+                            </button>
+                            <button id="deleteButton" type="button" onClick="buttonAction('delete');" disabled="true" class="btn btn-danger waves-effect waves-light mr-1">
+                            Delete
+                            </button>
+                            <button type="reset" onClick="doc('updateButton').disabled = true; doc('deleteButton').disabled = true; doc('addButton').disabled = false;" class="btn btn-secondary waves-effect">Reset</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">List of Items</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover table-centered table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Item Name</th>
+                                <th scope="col">Unit Type</th>
+                                <th scope="col">Stocks</th>
+                                <th scope="col">Selling Price</th>
+                                <th scope="col" colspan="2" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for for_item in item %}
+                            <tr>
+                                <th scope="row">{{ for_item.name }}</th>
+                                <td>{{ for_item.unit }}</td>
+                                <td>{{ for_item.stocks }}</td>
+                                <td>Rp. {{ for_item.price|intcomma }}</td>
+                                <td>
+                                    <div>
+                                        <button class="btn btn-success btn-sm waves-effect waves-light">Generate QR Code</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <button class="btn btn-info btn-sm waves-effect waves-light" onClick="updateItem({{ for_item.id }}, '{{ for_item.name }}', '{{ for_item.unit }}', {{ for_item.stocks }}, {{ for_item.price }})">Update</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+{% endblock content %}
+{% block javascript %}
+<script>
+var doc = (id) => { return document.getElementById(id) }
+function updateItem(id, name, unit, stocks, price){
+    doc('updateButton').disabled = false; 
+    doc('deleteButton').disabled = false; 
+    doc('addButton').disabled = true;
+    doc("itemid").value = id
+    doc("itemname").value = name,
+    $('#itemunit').val(unit);
+    doc("itemstocks").value = stocks
+    doc("itemprice").value = price
+}
+function buttonAction(type){
+    console.log('kepanggil ' + type)
+    var id = doc("itemid").value
+    var itemname = doc("itemname").value
+    var itemunit = document.querySelector('#itemunit option:checked');
+    var itemstocks = doc("itemstocks").value
+    var itemprice = doc("itemprice").value
+    
+    swal({
+        title: "Are you sure?",
+        text: `Are you sure to ${type} Item of ${itemname}?`,
+        icon: 'warning',
+        buttons: {
+            cancel: true,
+            confirm: true,
+        }
+    }).then((isConfirm) => {
+        if (isConfirm){
+            $.ajax({
+                headers: { "X-CSRFToken": "{{csrf_token}}" },
+                type: "POST",
+                url: "/merchant/item/",
+                data: {
+                    "type": type,
+                    "id": id,
+                    "name": itemname,
+                    "unit": itemunit.value,
+                    "stocks": itemstocks,
+                    "price": itemprice
+                },
+                dataType: "json"
+            }).done((data) => {
+                if (data.status){
+                    swal({
+                        title: "Item has been " + (type === "add" ? "added" : type === "update" ? "updated" : "deleted"),
+                        text: data.message,
+                        icon: 'success',
+                        timer: 1500
+                    }).then((result) => {
+                        window.location.href = ``
+                    })
+                    
+                } else {
+                    swal({
+                        title: 'Action Failed',
+                        text: data.message,
+                        icon: 'error',
+                        button: 'Okay'
+                    })
+                }
+            })
+        }
+    })
+}
+</script>
+{% endblock javascript %}

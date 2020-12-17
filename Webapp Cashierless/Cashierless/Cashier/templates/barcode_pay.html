@@ -1,0 +1,10 @@
+{% load humanize %}
+{% load qr_code %}
+<h4 class="card-title mb-2">Scan barcode to Pay!</h4><hr>
+<div class="cleafix">
+    <h5 class="float-left"><i class="mdi mdi-cart-outline"></i> Sub Total</h5>
+    <h5 class="font-18 text-right" id="subtotal">Rp. {{ total|intcomma }} </h5>
+</div>
+{% if barcode %}
+<center>{% qr_from_text barcode size="l" image_format="svg" error_correction="L" %}</center>  
+{% endif %}

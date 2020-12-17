@@ -1,0 +1,11 @@
+certifi==2020.11.8
+chardet==3.0.4
+colorzero==1.1
+gpiozero==1.5.1
+humanize==3.1.0
+idna==2.10
+numpy==1.19.4
+opencv-python==4.4.0.46
+pkg-resources==0.0.0
+requests==2.25.0
+urllib3==1.26.2

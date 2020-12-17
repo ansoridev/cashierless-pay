@@ -1,0 +1,169 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row align-items-center">
+    <div class="col-sm-6">
+       <div class="page-title-box">
+          <h4 class="font-size-18">Detail of #{{ deposit.record }}</h4>
+          <ol class="breadcrumb mb-0">
+             <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+             <li class="breadcrumb-item"><a href="javascript: void(0);">Billing</a></li>
+             <li class="breadcrumb-item"><a href="javascript: void(0);">Add Funds</a></li>
+             <li class="breadcrumb-item active">#{{ deposit.record }}</li>
+          </ol>
+       </div>
+    </div>
+ </div>
+ <!-- end page title -->
+ <div class="row">
+    <div class="col-xl-12">
+       <div class="card">
+          <div class="card-body">
+             <div class="row">
+                <div class="col-12">
+                   <div class="invoice-title">
+                      <h3 class="mt-0">
+                         <img src="/static/assets/images/cashierless_full.png" alt="" height="50">
+                      </h3>
+                   </div>
+                   <hr>
+                   <div class="no-gutters row">
+                      <div class="mb-30 col-md-6 col-xl-6">
+                         <div>
+                            <h5 class="card-title">Payment To:</h5>
+                            <ul class="invoice-info mb-4">
+                               <li><span>Status : </span><span class="
+                                {% if deposit.status == "PENDING" %}
+                                    badge badge-warning
+                                {% elif deposit.status == "SUCCESS" %}
+                                    badge badge-success
+                                {% else %}
+                                    badge badge-danger
+                                {% endif %}
+                                ">{{ deposit.status }}</span></li>
+                               <li><span>Payment Method : </span><span>{{ deposit.method.name }}</span></li>
+                               <li><span>No.Rek / No.Kirim : </span>
+                               {% if deposit.method.name == "QRIS" %}
+                               <a href="{{ deposit.method.number }}">Open QRIS Barcode</a>
+                               {% else %}
+                               {{ deposit.method.number }}
+                               {% endif %}
+                               </li>
+                               <li><span>A/N : </span><span>{{ deposit.method.nameholder }}</span></li>
+                               <li><span>Total Pembayaran : </span><span>Rp {{ totalbayar|intcomma }}</span></li>
+                               {% if deposit.status == "PENDING" %}
+                                    <li><small class="form-text text-muted" id="msgmuted">
+                                    {% if deposit.method.type == "MANUAL" %}
+                                    *Kode unik tidak digunakan! (Khusus Manual)
+                                    {% else %}
+                                    *Total Pembayaran Termasuk kode unik
+                                    {% endif %}
+                                    </small></li>
+                                    <li id="buttonConfirm">{% if deposit.method.type == "OTOMATIS" %}<button class="mt-2 btn btn-success waves-effect waves-light" onClick="confirmPay('CONFIRM')">Konfirmasi Pembayaran</button>{% else %}<a href="https://wa.me/6281338634040" class="mt-2 btn btn-success waves-effect waves-light">Konfirmasi Pembayaran</a>{% endif %}</li>
+                               {% endif %}
+                            </ul>
+                         </div>
+                      </div>
+                      <div class="mb-30 col-md-6 col-xl-6">
+                         <div>
+                            <h5 class="card-title">Transaction details</h5>
+                            <ul class="invoice-info mb-4">
+                               <li><span>Tipe : </span><span>{{ deposit.method.type }}</span></li>
+                               <li><span>Kode Unik : </span><span>{{ deposit.codeunik }}</span></li>
+                               <li><span>Jumlah Top Up : </span><span>Rp {{ deposit.total|intcomma }}</span></li>
+                               <li><span>Saldo Diterima : </span><span>Rp {{ totalbayar|intcomma }}</span></li>
+                               {% if deposit.status == "PENDING" %}
+                                    <li><small class="form-text text-muted" id="msgmuted2">
+                                    {% if deposit.method.type == "MANUAL" %}
+                                    *Kode unik tidak digunakan! (Khusus Manual)
+                                    {% else %}
+                                    *Total Saldo Diterima sudah termasuk penjumlahan kode unik
+                                    {% endif %}
+                                    </small></li>
+                               <li id="buttonCancel"><button class="mt-2 btn btn-danger waves-effect waves-light" onClick="confirmPay('CANCEL')">Batalkan Pembayaran</button></li>
+                               {% endif %}
+                            </ul>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-12">
+                   <div>
+                      <div class="p-2">
+                      </div>
+                      <div class="">
+                         <div class="table-responsive">
+                            <table class="table">
+                               <thead>
+                                  <tr>
+                                     <td><strong>Reference</strong></td>
+                                     <td><strong>Sender of funds</strong></td>
+                                     <td><strong>Paid Date</strong></td>
+                                  </tr>
+                               </thead>
+                               <tbody>
+                                  <tr>
+                                     <td>{{ deposit.ref }}</td>
+                                     <td>{{ deposit.frompaid }}</td>
+                                     <td>{{ deposit.datepaid }}</td>
+                                  </tr>
+                               </tbody>
+                            </table>
+                         </div>
+                         <div class="d-print-none">
+                            <div class="float-right">
+                               <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i class="fa fa-print"></i></a>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <!-- end row -->
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- end row -->
+{% endblock content %}
+{% block javascript %}
+<script>
+function confirmPay(typenya){
+    var token = '{{csrf_token}}'
+    $.ajax({
+        headers: { "X-CSRFToken": token },
+        type: "POST",
+        url: "",
+        data: {
+            "type": typenya
+        },
+        dataType: "json"
+    }).done((data) => {
+        if (data.status){
+            swal({
+                title: (typenya === "CONFIRM" ? "Payment successfully" : "Payment cancelled"),
+                text: data.message,
+                icon: 'success',
+                timer: 1500
+            }).then((result) => {
+                window.location.href = ``
+            })
+            
+        } else {
+            swal({
+                title: (typenya === "CONFIRM" ? "Payment failed" : "Technical error"),
+                text: data.message,
+                icon: 'error',
+                button: 'Okay',
+                timer: 3000
+            })
+        }
+    })
+}
+</script>
+{% endblock javascript %}

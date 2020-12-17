@@ -1,0 +1,112 @@
+{% extends 'layout/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4 class="font-size-18">Add Funds</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Cashierless</a></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Billing</a></li>
+                    <li class="breadcrumb-item active">Add Funds</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Add Funds</h3>
+                    <p class="card-title-desc">You can adding funds to Cashierless with easier, there's many payment method available to use!</p>
+                    <hr />
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="control-label">Payment Method</label>
+                                <select required class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true" name="method" id="method_funds">
+                                    <optgroup label="Manual Payment" data-select2-id="1">
+                                        {% for man in paymentman %}
+                                        <option value="{{ man.id }}" data-select2-id="8">{{ man.name }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="Automatic Payment" data-select2-id="2">
+                                        {% for oto in paymentoto %}
+                                        <option value="{{ oto.id }}" data-select2-id="8">{{ oto.name }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="input-currency">Amount</label>
+                                <input required name="amount" id="input-currency" placeholder="Rp. 0,00" class="form-control input-mask text-left" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 0, 'digitsOptional': true, 'prefix': 'Rp. ', 'placeholder': ''" im-insert="true" style="text-align: right;">
+                                <span class="text-muted">e.g "Rp. 0"</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onClick="addfunds_now()" class="btn btn-primary waves-effect waves-light pull-right">Submit</button>
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+function addfunds_now(){
+var amount = document.getElementById('input-currency').value
+var method_pay = document.querySelector('#method_funds option:checked');
+var method_id = method_pay.value
+var token = '{{csrf_token}}'
+if (!amount){
+    swal({
+        title: 'Add funds failed.',
+        text: 'Please enter amount of add funds!',
+        icon: 'error',
+        button: 'Okay',
+        timer: 3000
+    })
+}
+
+$.ajax({
+    headers: { "X-CSRFToken": token },
+    type: "POST",
+    url: "/topup/",
+    data: {
+        "method": method_id,
+        "amount": amount
+    },
+    dataType: "json"
+}).done((data) => {
+    if (data.status){
+        swal({
+            title: `Add funds #${data.data.record} created!`,
+            text: data.message,
+            icon: 'success',
+            timer: 1500
+        }).then((result) => {
+            window.location.href = `/topup/${data.data.id}/`
+        })
+        
+    } else {
+        swal({
+            title: 'Add funds failed.',
+            text: data.message,
+            icon: 'error',
+            button: 'Okay',
+            timer: 3000
+        })
+    }
+})
+}
+</script>
+{% endblock javascript %}

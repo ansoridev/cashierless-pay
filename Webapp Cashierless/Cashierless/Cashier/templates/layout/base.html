@@ -1,0 +1,181 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Dashboard | Cashierless</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Dashboard of Cashierless Payment to local cashierless store" name="description" />
+        <meta content="Ahmad Ansori" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'assets/images/cashierless.ico' %}">
+
+        <link href="{% static 'assets/libs/chartist/chartist.min.css' %}" rel="stylesheet">
+
+        <!-- Bootstrap Css -->
+        <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+        <style>
+        .navbar-brand-box {
+            background-color: #F8F8FA !important;
+        }
+        h5.card-title{
+            font-size:16px;
+            border-bottom:none;
+            padding-bottom:0;
+            text-align:left;
+            text-transform:uppercase;
+            margin-bottom:0;
+            border-color:rgba(255,255,255,0.4);
+            margin-bottom:15px;
+            border-bottom:1px solid #eee;
+            padding-bottom:1rem;
+            font-weight:600;
+            text-transform:capitalize;
+        }
+        ul.invoice-info{
+            list-style:none;
+            padding-inline-start: 0px;
+        }
+        ul.invoice-info li{
+            font-size:16px;
+            line-height:30px;
+            display:table
+        }
+        ul.invoice-info li span:first-child{
+            width:230px;
+            font-weight:600
+        }
+        ul.invoice-info li span:first-child:after{
+            float:right;
+            line-height:inherit;
+            padding-right:30px
+        }
+        .swal-text {
+            font-size: 16px;
+            position: relative;
+            float: none;
+            line-height: normal;
+            vertical-align: top;
+            text-align: center;
+            display: inline-block;
+            margin: 0;
+            padding: 0 10px;
+            font-weight: 400;
+            color: rgba(0,0,0,.64);
+            max-width: calc(100% - 20px);
+            overflow-wrap: break-word;
+            box-sizing: border-box;
+        }
+        </style>
+        {% block style %}
+        {% endblock style %}
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {% include 'layout/header.html' %}
+
+            <!-- ========== Left Sidebar Start ========== -->
+            {% include 'layout/menu.html' %}
+            <!-- Left Sidebar End -->
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+                         {% block content %}
+                         {% endblock content %}
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content --> 
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                © <script>document.write(new Date().getFullYear())</script> Cashierless <span class="d-none d-sm-inline-block"> - Build with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ahmadansori.com">Ahmad Ansori</a>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- end main content-->
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!-- Right Sidebar -->
+        <div class="right-bar">
+            <div data-simplebar class="h-100">
+                <div class="rightbar-title px-3 py-4">
+                    <a href="javascript:void(0);" class="right-bar-toggle float-right">
+                        <i class="mdi mdi-close noti-icon"></i>
+                    </a>
+                    <h5 class="m-0">Settings</h5>
+                </div>
+
+                <!-- Settings -->
+                <hr class="mt-0" />
+                <h6 class="text-center">Choose Layouts</h6>
+
+                <div class="p-4">
+
+                    <div class="custom-control custom-switch mb-3">
+                        <input type="checkbox" class="custom-control-input theme-choice" id="light-mode-switch" checked />
+                        <label class="custom-control-label" for="light-mode-switch">Light Mode</label>
+                    </div>
+
+                    <div class="custom-control custom-switch mb-3">
+                        <input type="checkbox" class="custom-control-input theme-choice" id="dark-mode-switch" data-bsStyle="{% static 'assets/css/bootstrap-dark.min.css' %}" 
+                            data-appStyle="{% static 'assets/css/app-dark.min.css' %}" />
+                        <label class="custom-control-label" for="dark-mode-switch">Dark Mode</label>
+                    </div>
+    
+                    <div class="custom-control custom-switch mb-5">
+                        <input type="checkbox" class="custom-control-input theme-choice" id="rtl-mode-switch" data-appStyle="{% static 'assets/css/app-rtl.min.css' %}" />
+                        <label class="custom-control-label" for="rtl-mode-switch">RTL Mode</label>
+                    </div>
+
+
+                </div>
+
+            </div> <!-- end slimscroll-menu-->
+        </div>
+        <div class="rightbar-overlay"></div>
+
+        <!-- JAVASCRIPT -->
+        <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+        <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+        <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+
+        <!-- Peity chart-->
+        <script src="{% static 'assets/libs/peity/jquery.peity.min.js' %}"></script>
+
+        <!-- Plugin Js-->
+        <script src="{% static 'assets/libs/chartist/chartist.min.js' %}"></script>
+        <script src="{% static 'assets/libs/chartist-plugin-tooltips/chartist-plugin-tooltip.min.js' %}"></script>
+
+        <script src="{% static 'assets/js/pages/dashboard.init.js' %}"></script>
+        <script src="{% static 'assets/libs/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+        <script src="{% static 'assets/js/pages/form-mask.init.js' %}"></script>
+        <script src="{% static 'assets/js/app.js' %}"></script>
+        <!-- Sweet Alerts js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+        {% block javascript %}
+        {% endblock javascript %}
+
+    </body>
+
+</html>

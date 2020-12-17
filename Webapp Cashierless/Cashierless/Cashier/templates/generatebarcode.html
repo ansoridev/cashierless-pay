@@ -1,0 +1,4 @@
+{% load qr_code %}
+{% for for_barcode in barcode %}
+{% qr_from_text for_barcode size="l" image_format="svg" error_correction="L" %}
+{% endfor %}

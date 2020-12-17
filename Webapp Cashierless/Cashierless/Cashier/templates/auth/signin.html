@@ -1,0 +1,128 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Sign In  | Cashierless Payments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Payment Integrations with Cashierless Store" name="description" />
+    <meta content="Ahmad Ansori" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <!-- Bootstrap Css -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+    <div class="account-pages my-5 pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card overflow-hidden">
+
+                        <div class="card-body p-4">
+                            <div class="p-3"><img src="/static/assets/images/cashierless_full.png" width="200" class="mb-3">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Enter E-mail address">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="userpassword">Password</label>
+                                        <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customControlInline">
+                                                <label class="custom-control-label" for="customControlInline">Remember me</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 text-right">
+                                            <button class="btn btn-primary w-md waves-effect waves-light" onclick="signin()">Sign In</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mt-2 mb-0 row">
+                                        <div class="col-12 mt-4">
+                                            <a href="/forget-password"><i class="mdi mdi-lock"></i> Forgot your password?</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-5 text-center">
+                        <p>Don't have an account ? <a href="/signup" class="font-weight-medium text-primary"> Signup now </a> </p>
+                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Cashierless Pay. Build with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ahmadansori.com">Ahmad Ansori</a></p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <script>
+        function signin(){
+            var token = '{{csrf_token}}';
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                type: "POST",
+                url: "/signin/",
+                data: {
+                    "email": document.getElementById("email").value,
+                    "password": document.getElementById("userpassword").value
+                },
+                dataType: "json"
+            }).done((data) => {
+                if (data.status){
+                    swal({
+                        title: 'Authentication success',
+                        text: 'You will redirected to user dashbaord page.',
+                        icon: 'success',
+                        timer: 1500
+                    }).then((result) => {
+                        window.location.href = "/home"
+                    })
+                    
+                } else {
+                    swal({
+                        title: 'Authentication failed',
+                        text: 'Your e-mail or password is inccorect, make sure its correct',
+                        icon: 'error',
+                        button: 'Okay',
+                        timer: 3000
+                    })
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

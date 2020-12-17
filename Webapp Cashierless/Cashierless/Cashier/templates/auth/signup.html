@@ -1,0 +1,156 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Sign Up  | Cashierless Payments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Payment Integrations with Cashierless Store" name="description" />
+    <meta content="Ahmad Ansori" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <!-- Bootstrap Css -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+    <div class="account-pages my-5 pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card overflow-hidden">
+                        <div class="bg-primary">
+                            <div class="text-primary text-center p-4">
+                                <h5 class="text-white font-size-20">Let's Join Us !</h5>
+                                <p class="text-white-50">Sign up to access our Cashierles.</p>
+                                <a href="#" class="logo logo-admin">
+                                    <img src="{% static 'assets/images/logo-sm.png' %}" height="24" alt="logo">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <div class="p-3">
+                                <div class="form-horizontal mt-4">
+                                    <div class="form-group">
+                                        <label for="email">Full Name</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Enter Your Name">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Enter E-mail address">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="userpassword">Password</label>
+                                        <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                                    </div>
+
+                                    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+                                    <div class="g-recaptcha" data-sitekey="6LefFaoZAAAAAKtlMagZ7iNPgE8l9M9prRSm1z6M" aria-required="true" required></div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <div class="custom-control custom-checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 text-right">
+                                            <button class="btn btn-primary w-md waves-effect waves-light" onclick="signup()">Sign Up</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mt-2 mb-0 row">
+                                        <div class="col-12 mt-4">
+                                            <p class="mb-0">By registering you agree to the Cashierless <a href="#" class="text-primary">Terms of Use</a></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-5 text-center">
+                        <p>Already have an account ? <a href="/signin" class="font-weight-medium text-primary"> Signin now </a> </p>
+                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Cashierless. Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ahmadansori.com">Ahmad Ansori</a></p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <script>
+        function signup(){
+            var token = '{{csrf_token}}';
+
+            if (!document.getElementById("name").value || !document.getElementById("email").value || !document.getElementById("userpassword").value) {
+                swal({
+                        title: 'Registration failed',
+                        text: 'E-mail account already exist, Please try another e-mail or reset your password',
+                        icon: 'error',
+                        button: 'Okay',
+                        timer: 3000
+                    })
+            }
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                type: "POST",
+                url: "/signup/",
+                data: {
+                    "name": document.getElementById("name").value,
+                    "email": document.getElementById("email").value,
+                    "password": document.getElementById("userpassword").value
+                },
+                dataType: "json"
+            }).done((data) => {
+                if (data.status){
+                    swal({
+                        title: 'Registration success',
+                        text: 'You will redirected to user dashbaord page.',
+                        icon: 'success',
+                        timer: 1500
+                    }).then((result) => {
+                        window.location.href = "/home"
+                    })
+                    
+                } else {
+                    swal({
+                        title: 'Registration failed',
+                        text: 'E-mail account already exist, Please try another e-mail or reset your password',
+                        icon: 'error',
+                        button: 'Okay',
+                        timer: 3000
+                    })
+                }
+            })
+        }
+    </script>
+
+</body>
+
+</html>
