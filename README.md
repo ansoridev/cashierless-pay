@@ -43,7 +43,7 @@ Terima kasih kepada:
 
 ### Installation
 
-Anda dapat mengaktifkan membuat environment terpisah untuk project ini dengan cara
+Anda dapat mengaktifkan project webapp dengan membuat environment terpisah untuk project ini dengan cara
 
 Untuk Windows
 ```
@@ -59,9 +59,15 @@ $ source "venv/bin/activate"
 $ pip install -r requirement.txt
 ```
 
-Pengaktifan server Django
+Setelah itu anda dapat menyesuaikan database sesuai dengan konfigurasi keinginan anda
+dan lakukan migrasi database dengan cara
 ```
 > cd Cashierless
+> py m migrate
+```
+
+Lalu lakukan pengaktifan server Django
+```
 > python3 m runserver 0.0.0.0:80 --insecure
 ```
 
