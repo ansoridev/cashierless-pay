@@ -64,11 +64,18 @@ dan lakukan migrasi database dengan cara
 ```
 > cd Cashierless
 > py m migrate
+> py m makemigrations Cashier
+> py m migrate Cashier
 ```
 
 Lalu lakukan pengaktifan server Django
 ```
 > python3 m runserver 0.0.0.0:80 --insecure
+```
+
+dan untuk membuat akun untuk administrator yang berada di path /admin
+```
+> python3 m createsuperuser
 ```
 
 ### Terima Kasih
